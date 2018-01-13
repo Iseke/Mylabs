@@ -75,5 +75,5 @@ namespace povtor
                 vec[i].Coutinfo();
             }
         }
-    }
+    }//t2
 }
