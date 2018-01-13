@@ -12,9 +12,12 @@ namespace ractangle
        public string  height;
         public void cinInfo()
         {
-            Console.WriteLine("Please write a width and height:");
+            Console.WriteLine("Please write a width :");
 
             width = Console.ReadLine();
+
+            Console.WriteLine("Please write a height :");
+
 
             height = Console.ReadLine();
          
