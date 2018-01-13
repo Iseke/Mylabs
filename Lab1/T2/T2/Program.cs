@@ -66,8 +66,12 @@ namespace povtor
                         vec[i] = vec[j];
                         vec[j] = v;
                     }
-
-
+                    //lkdjflgkdhfkghdgfg
+                    ///gdsgdfghgsasdfkhgfdsadfghjghfdsadfdghj
+                    ///sgfdhgfjkglhhjkgjfhdgsf
+                    ///gdfhjfhdgs
+                    //sfdgfhdjghdgsf
+                    
                 }
             }
             for (int i = 0; i < n; i++)
