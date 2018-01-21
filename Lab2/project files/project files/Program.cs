@@ -5,19 +5,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace project_files
+namespace Example4
 {
     class Program
     {
-        static void StateInfo(int index, DirectoryInfo[] arr)
+        static void Str(string s)
+        {
+            if (s.Length < 20)
+            {
+                s="|     " + s;
+            }
+            else
+            {
+                s = s.Remove(15, s.Length - 15);
+                s = "|     " + s+"...";
+            }
+            Console.Write(s);
+            for (int j = 5; j <= 40 - s.Length; ++j)
+            {
+                Console.Write(' ');
+            }
+
+            Console.Write('|');
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine();
+        }
+        
+        static void PrintState(int index, FileSystemInfo[] arr)
         {
             Console.BackgroundColor = ConsoleColor.Black;
-
             Console.Clear();
-
-            for(int i = 0; i < arr.Length; i++)
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write("\n\n\n                    ");
+            for (int m = 0; m < 37; m++)
             {
-                if (arr[i].GetType() == typeof(FileSystemInfo))
+                Console.Write('*');
+            }
+            Console.WriteLine();
+            for (int i = 0; i < arr.Length; ++i)
+            {
+                Console.Write("                    ");
+                
+                
+                
+                if (arr[i].GetType() == typeof(DirectoryInfo))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
@@ -33,59 +64,66 @@ namespace project_files
                 {
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
-                Console.Write("|  ");
 
-                Console.Write(arr[i].Name);
+                Str(arr[i].Name);
 
-                for (int j = 1; j < 20 - arr[i].Name.Length; ++i)
-                {
-                    Console.Write(' ');
-                }
-                Console.WriteLine('|');
+                
+
             }
-
-            
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write("                    ");
+            for (int m = 0; m < 37; m++)
+            {
+                Console.Write('*');
+            }
         }
+
+        static void F(string put)
+        {
+            {
+                DirectoryInfo di = new DirectoryInfo(@put);
+                FileSystemInfo[] arr = di.GetFileSystemInfos();
+                int index = 0;
+                bool quit = false;
+
+                while (!quit)
+                {
+                    PrintState(index, arr);
+
+                    ConsoleKeyInfo pressedKey = Console.ReadKey();
+
+
+                    switch (pressedKey.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            index--;
+                            if (index < 0) index = arr.Length - 1;
+                            break;
+                        case ConsoleKey.DownArrow:
+                            index = (index + 1) % arr.Length;
+                            break;
+                        case ConsoleKey.Enter:
+                            if (arr[index].GetType() == typeof(DirectoryInfo))
+                            {
+                                DirectoryInfo d = arr[index] as DirectoryInfo;
+                                F(arr[index].FullName);
+                            }
+                            break;
+                        case ConsoleKey.Escape:
+                            quit = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+            }
+        }
+
         static void Main(string[] args)
         {
-            DirectoryInfo di = new DirectoryInfo(@"C:\Users\Islam\Desktop\c#");
-            DirectoryInfo[] dir = di.GetDirectories();
-            int index = 0;
-            bool quite = false;
-            while (!quite)
-            {
-                StateInfo(index, dir);
-                ConsoleKeyInfo pressedKey = Console.ReadKey();
-                switch (pressedKey.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        index--;
-                        if (index < 0)
-                        {
-                            index = dir.Length - 1;
-                            
-                        }
-                        break;
-                    case ConsoleKey.DownArrow:
-                        index = (index + 1) % dir.Length;
-                        break;
-                    case ConsoleKey.Enter:
-                        if (dir[index].GetType() == typeof(DirectoryInfo))
-                        {
-                            DirectoryInfo d = dir[index] as DirectoryInfo;
-                            dir = d.GetDirectories();
-                            index = 0;
-                        }
-                        break;
-                    case ConsoleKey.Escape:
-                        quite = true;
-                        break;
+            F(@"C:\Users\Islam\Desktop\c#");
 
-
-                    default:
-                        break;
-                }
-            }
         }
     }
 }
