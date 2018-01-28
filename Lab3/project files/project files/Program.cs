@@ -8,54 +8,51 @@ using System.Threading.Tasks;
 
 namespace Example4
 {
-   
+
     class Program
     {
-      
-        
+
+
         static void Str(string s)
         {
-       
+
 
             if (s.Length < 20)
             {
-                s="|     " + s;
+                s = "│  " + s;
             }
             else
             {
                 s = s.Remove(15, s.Length - 15);
-                s = "|     " + s+"...";
+                s = "│  " + s + "...";
             }
             Console.Write(s);
-            for (int j = 5; j <= 40 - s.Length; ++j)
+            for (int j = 5; j <= 30 - s.Length; ++j)
             {
                 Console.Write(' ');
             }
 
-            Console.Write('|');
+            Console.Write('│');
             Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine();
         }
 
-        
+
         static void PrintState(int index, List<FileSystemInfo> arr)
         {
-            
+
             Console.BackgroundColor = ConsoleColor.Black;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write("\n\n\n                    ");
-            Console.SetCursorPosition(26, 2);
+            Console.SetCursorPosition(4, 2);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Name");
             Console.WriteLine();
-            for (int i = 0; i < arr.Count; ++i)
+            
+            for (int i = 0; i < arr.Count ; ++i)
             {
-                
-                Console.Write("                    ");
-
-
-
+               
                 if (arr[i].GetType() == typeof(DirectoryInfo))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -63,29 +60,34 @@ namespace Example4
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    
+
                 }
 
-                    if (index == i)
-                    {
-                        Console.BackgroundColor = ConsoleColor.Red;
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.Black;
-                    }
+                if (index == i)
+                {
+                    Console.BackgroundColor = ConsoleColor.Red;
+                }
+                else
+                {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
 
-                    Str(arr[i].Name);
-                
+                Str(arr[i].Name);
+
 
 
             }
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("                    ");
-            for (int m = 0; m < 37; m++)
+            Console.Write('└');
+            for (int m = 1; m < 26; m++)
             {
-                Console.Write('-');
+                Console.Write('─');
             }
+            Console.Write('┘');
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("  "+DateTime.Now);
+
             TaskBarInfo(index, arr);
 
 
@@ -93,45 +95,46 @@ namespace Example4
         static void TaskBarInfo(int index, List<FileSystemInfo> arr)
         {
 
-          
-            Console.SetCursorPosition(60, 2);
+
+            Console.SetCursorPosition(35, 2);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Size");
-            Console.SetCursorPosition(70, 2);
+            Console.SetCursorPosition(48, 2);
             Console.WriteLine("Last access");
-            Console.SetCursorPosition(95, 2);
+            Console.SetCursorPosition(70, 2);
             Console.WriteLine("Type");
-            Console.SetCursorPosition(1, arr.Count + 10);
-            Console.WriteLine(DateTime.Now);
+           
 
             if (arr[index].GetType() == typeof(FileInfo))
             {
                 GetFileSizeInfo(arr[index].FullName, index);
-                Console.SetCursorPosition(70, index + 4);
+                Console.SetCursorPosition(48, index + 4);
                 Console.WriteLine(arr[index].LastAccessTime);
 
-                Console.SetCursorPosition(95, index + 4);
+                Console.SetCursorPosition(70, index + 4);
                 Console.WriteLine(arr[index].Extension);
-
+                Console.SetCursorPosition(0,0);
             }
             else
             {
-                Console.SetCursorPosition(60, index + 4);
-                Console.WriteLine( GetDirectorySize(arr[index].FullName)+" KB");
-                Console.SetCursorPosition(70, index + 4);
+                Console.SetCursorPosition(35, index + 4);
+                Console.WriteLine(GetDirectorySize(arr[index].FullName) + " KB");
+                Console.SetCursorPosition(48, index + 4);
                 Console.WriteLine(arr[index].LastAccessTime);
-                Console.SetCursorPosition(95, index + 4);
+                Console.SetCursorPosition(70, index + 4);
                 Console.WriteLine(arr[index].Attributes);
+                Console.SetCursorPosition(0, 0);
+
             }
         }
-       
+
         static void GetFileSizeInfo(string s, int i)
         {
-            Console.SetCursorPosition(60, i+4);
+            Console.SetCursorPosition(35, i + 4);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             FileInfo file = new FileInfo(s);
-            Console.Write("{0} KB", file.Length/1024 );
+            Console.Write("{0} KB", file.Length / 1024);
         }
         static long GetDirectorySize(string path)
         {
@@ -144,7 +147,7 @@ namespace Example4
                 size += info.Length;
             }
 
-            return size/1024;
+            return size / 1024;
         }
         static void PrintFile(List<FileSystemInfo> arr, int i)
         {
@@ -234,16 +237,16 @@ namespace Example4
                                 else if (arr[index].GetType() == typeof(FileInfo))
                                 {
                                     PrintFile(arr, index);
-                         
+
                                 }
 
                             }
-                            catch(Exception e)
+                            catch (Exception e)
                             {
                                 break;
                             }
 
-                              break;
+                            break;
                         case ConsoleKey.Escape:
                             quit = true;
                             break;
@@ -255,14 +258,14 @@ namespace Example4
                 Console.Clear();
             }
         }
-       
+
 
         static void Main(string[] args)
         {
             //Console.SetWindowSize(40,40);
-            
+
             F(@"C:\Users\Islam\Desktop\c#");
-           
+
         }
     }
 }
