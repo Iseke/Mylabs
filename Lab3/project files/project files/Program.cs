@@ -80,13 +80,20 @@ namespace Example4
 
 
             }
-
-            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write("                    ");
             for (int m = 0; m < 37; m++)
             {
-                Console.Write('*');
+                Console.Write('-');
             }
+            TaskBarInfo(index, arr);
+
+
+        }
+        static void TaskBarInfo(int index, List<FileSystemInfo> arr)
+        {
+
+          
             Console.SetCursorPosition(60, 2);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Size");
@@ -94,29 +101,31 @@ namespace Example4
             Console.WriteLine("Last access");
             Console.SetCursorPosition(95, 2);
             Console.WriteLine("Type");
+            Console.SetCursorPosition(1, arr.Count + 10);
+            Console.WriteLine(DateTime.Now);
 
             if (arr[index].GetType() == typeof(FileInfo))
             {
                 GetFileSizeInfo(arr[index].FullName, index);
                 Console.SetCursorPosition(70, index + 4);
-               Console.WriteLine( arr[index].LastAccessTime );
-       
+                Console.WriteLine(arr[index].LastAccessTime);
+
                 Console.SetCursorPosition(95, index + 4);
                 Console.WriteLine(arr[index].Extension);
-            
+
             }
-            else 
+            else
             {
-                GetDirSizeInfo(arr[index].FullName, index);
+                Console.SetCursorPosition(60, index + 4);
+                Console.WriteLine( GetDirectorySize(arr[index].FullName)+" KB");
                 Console.SetCursorPosition(70, index + 4);
-                Console.WriteLine(arr[index].LastAccessTime );
+                Console.WriteLine(arr[index].LastAccessTime);
                 Console.SetCursorPosition(95, index + 4);
                 Console.WriteLine(arr[index].Attributes);
             }
-
         }
        
-       static void GetFileSizeInfo(string s, int i)
+        static void GetFileSizeInfo(string s, int i)
         {
             Console.SetCursorPosition(60, i+4);
             Console.BackgroundColor = ConsoleColor.Black;
@@ -124,13 +133,67 @@ namespace Example4
             FileInfo file = new FileInfo(s);
             Console.Write("{0} KB", file.Length/1024 );
         }
-        static void GetDirSizeInfo(string s, int i)
+        static long GetDirectorySize(string path)
         {
-            Console.SetCursorPosition(60, i + 4);
-            Console.BackgroundColor = ConsoleColor.Black;
+            string[] files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+
+            long size = 0;
+            foreach (string name in files)
+            {
+                FileInfo info = new FileInfo(name);
+                size += info.Length;
+            }
+
+            return size/1024;
+        }
+        static void PrintFile(List<FileSystemInfo> arr, int i)
+        {
+
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
-            DirectoryInfo di = new DirectoryInfo(s);
-            Console.WriteLine(di.GetFileSystemInfos().Count() + " items");
+            Console.WriteLine("If you want to open in window press : 1 ");
+            Console.WriteLine("If you want to open in programm press : 2 ");
+            ConsoleKeyInfo Press = Console.ReadKey();
+            switch (Press.Key)
+            {
+                case ConsoleKey.D1:
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    FileStream fs = null;
+                    StreamReader sr = null;
+                    try
+                    {
+                        fs = new FileStream(arr[i].FullName, FileMode.Open, FileAccess.Read);
+                        sr = new StreamReader(fs);
+
+                        Console.WriteLine(sr.ReadToEnd());
+                        Console.ReadKey();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Cannot open file!");
+
+                    }
+                    finally
+                    {
+                        if (sr != null)
+                        {
+                            sr.Close();
+                        }
+
+                        if (fs != null)
+                        {
+                            fs.Close();
+                        }
+                    }
+                    break;
+                case ConsoleKey.D2:
+                    Process.Start(arr[i].FullName);
+                    break;
+
+            }
 
         }
 
@@ -170,55 +233,8 @@ namespace Example4
                                 }
                                 else if (arr[index].GetType() == typeof(FileInfo))
                                 {
-                                   
-                                    Console.BackgroundColor = ConsoleColor.Blue;
-                                    Console.Clear();
-                                    Console.ForegroundColor = ConsoleColor.Cyan;
-                                    Console.WriteLine("If you want to open in window press : 1 ");
-                                    Console.WriteLine("If you want to open in programm press : 2 ");
-                                    ConsoleKeyInfo Press = Console.ReadKey();
-                                    switch (Press.Key)
-                                    {
-                                        case ConsoleKey.D1:
-                                            Console.BackgroundColor = ConsoleColor.Blue;
-                                            Console.Clear();
-                                            Console.ForegroundColor = ConsoleColor.Cyan;
-                                            FileStream fs = null;
-                                            StreamReader sr = null;
-                                            try
-                                            {
-                                                fs = new FileStream(arr[index].FullName, FileMode.Open, FileAccess.Read);
-                                                sr = new StreamReader(fs);
-
-                                                Console.WriteLine(sr.ReadToEnd());
-                                                Console.ReadKey();
-                                            }
-                                            catch (Exception e)
-                                            {
-                                                Console.WriteLine("Cannot open file!");
-
-                                            }
-                                            finally
-                                            {
-                                                if (sr != null)
-                                                {
-                                                    sr.Close();
-                                                }
-
-                                                if (fs != null)
-                                                {
-                                                    fs.Close();
-                                                }
-                                            }
-                                            break;
-                                        case ConsoleKey.D2:
-                                            Process.Start(arr[index].FullName);
-                                            break;
-
-                                    } 
-
-                          
-
+                                    PrintFile(arr, index);
+                         
                                 }
 
                             }
