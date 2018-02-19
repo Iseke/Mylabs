@@ -19,30 +19,11 @@ namespace SnakeExample
 
 
         }
-        public  void SavedWall(Wall wall)
+        public Wall()
         {
 
-            using (FileStream fs = new FileStream("snakewall.xml", FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-
-
-                XmlSerializer xs = new XmlSerializer(typeof(Wall));
-                xs.Serialize(fs, wall);
-
-
-            }
-
         }
-        public  Wall LoadWall()
-        {
-            FileStream fs = new FileStream("snakewall.xml", FileMode.Open, FileAccess.Read);
-            XmlSerializer xs = new XmlSerializer(typeof(Wall));
-            Wall wall = xs.Deserialize(fs) as Wall;
-
-
-            fs.Close();
-            return wall;
-        }
+       
         public void LoadLevel(GameLevel level) {
 
             string name = "";

@@ -13,11 +13,14 @@ namespace SnakeExample
     {
         public int DX { get; set; }
         public int DY { get; set; }
+        public Worm()
+        {
 
+        }
         public Worm(Point firstpoint, char sign, ConsoleColor color) : base(firstpoint, sign, color)
         {
             DX = 0;
-            DY = 1;
+            DY = 0;
         }
 
 
@@ -36,28 +39,7 @@ namespace SnakeExample
            
         }
 
-        public  void SavedWorm()
-        {
 
-            using (FileStream fs = new FileStream("snakeworm.xml", FileMode.Truncate, FileAccess.ReadWrite))
-            {
-
-
-                XmlSerializer xs = new XmlSerializer(typeof(Worm));
-                xs.Serialize(fs, this);
-
-
-            }
-
-        }
-        public  Worm LoadWorm()
-        {
-            using (FileStream fs = new FileStream("snakeworm.xml", FileMode.Open, FileAccess.Read))
-            {
-                XmlSerializer xs = new XmlSerializer(typeof(Worm));
-                Worm worm = xs.Deserialize(fs) as Worm;
-                return worm;
-            }
-        }
+        
     }
 }

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SnakeExample
 {
 
     public abstract class GameObject
     {
-        public List<Point> body { get; }
-        public char sign { get; }
-        public ConsoleColor color { get; }
+        public List<Point> body { get; set; }
+        public char sign { get; set; }
+        public ConsoleColor color { get; set; }
         public GameObject(Point firstpoint ,char sign,ConsoleColor color)
         {
             this.body = new List<Point>();
@@ -22,6 +24,10 @@ namespace SnakeExample
             this.sign = sign;
             this.color = color;
         } 
+        public GameObject()
+        {
+
+        }
        /*public void Clear()
         {
             Console.ForegroundColor = ConsoleColor.Black;
@@ -52,6 +58,30 @@ namespace SnakeExample
                     break;
                 }
                 
+            }
+            return res;
+        }
+        public void SaveGame()
+        {
+            Type t = this.GetType();
+            string file = t.Name + ".xml";
+            using (FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            {
+                XmlSerializer xs = new XmlSerializer(t);
+                xs.Serialize(fs, this);
+            }
+        }
+        public GameObject Load()
+        {
+            GameObject res = null;
+            Type t = this.GetType();
+            string file = t.Name + ".xml";
+            using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+            {
+                XmlSerializer xs = new XmlSerializer(t);
+                res = xs.Deserialize(fs) as GameObject;
+                
+
             }
             return res;
         }

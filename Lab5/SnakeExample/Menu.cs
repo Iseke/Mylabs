@@ -14,7 +14,8 @@ namespace SnakeExample
         Game game = new Game();
         string[] items = { "New game","Load game" ,"Save game", "Settings","Exit" };
         int SelectItems = 0;
-
+        Worm worm;
+        Food food;
         void NewGame()
         {
             Console.Clear();
@@ -24,35 +25,21 @@ namespace SnakeExample
                 ConsoleKeyInfo pressbutton = Console.ReadKey();
                 game.Process(pressbutton);
             }
-            if (game.isalive == false)
-            {
-                Console.WriteLine("Game Over");
-                Console.WriteLine("Your score: " + Game.score);
-            }
+          
+
            // StatusBar.ShowInfo("NewGame");
         }
 
         void LoadGame()
         {
-           /* Console.Clear();
-            Game game =  Game.LoadGame();
-            game.Start();
-            while (game.isalive)
-            {
-                ConsoleKeyInfo pressbutton = Console.ReadKey();
-                game.Process(pressbutton);
-            }*/
 
-           // StatusBar.ShowInfo("LoadGame!");
+
         }
 
         void SaveGame()
-        {
-
+        {   
             
-            Console.Clear();
-            Console.WriteLine("Game Saved!");
-           // StatusBar.ShowInfo("SaveGame!");
+                 
         }
 
         void Settings()
@@ -84,14 +71,7 @@ namespace SnakeExample
         {
             Console.SetCursorPosition(0, 0);
             Console.BackgroundColor = ConsoleColor.Black;
-           /* for (int i = 0; i < game.boardH - 2; ++i)
-            {
-                for (int j = 0; j <game.boardW; ++j)
-                {
-                    Console.Write(' ');
-                }
-                Console.WriteLine();
-            }*/
+          
             Console.SetCursorPosition(2, (game.boardH - 25) / 2);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write('╔');
@@ -129,7 +109,7 @@ namespace SnakeExample
 
         }
 
-        public void Process()
+        public  void Process()
         {
             bool quit = false;
             while (!quit)
@@ -162,10 +142,15 @@ namespace SnakeExample
                                 break;
 
                             case 1:
-                                LoadGame();
+
+                                worm = worm.Load() as Worm;
+                                food = food.Load() as Food;
                                 break;
                             case 2:
-                                SaveGame();
+
+                                worm.SaveGame();
+                                food.SaveGame();
+
                                 break;
                             case 3:
                                 Settings();
