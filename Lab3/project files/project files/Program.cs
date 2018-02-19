@@ -42,7 +42,7 @@ namespace Example4
         {
 
             Console.BackgroundColor = ConsoleColor.Black;
-            Console.Clear();
+           // Console.Clear();
             Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.Write("\n\n\n                    ");
             Console.SetCursorPosition(4, 2);
@@ -197,7 +197,8 @@ namespace Example4
                     break;
 
             }
-
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Clear();
         }
 
         static void F(string put)
@@ -205,8 +206,9 @@ namespace Example4
             {
                 DirectoryInfo di = new DirectoryInfo(@put);
                 List<FileSystemInfo> arr = new List<FileSystemInfo>();
-                arr.AddRange(di.GetFiles());
                 arr.AddRange(di.GetDirectories());
+                arr.AddRange(di.GetFiles());
+               
                 int index = 0;
                 bool quit = false;
 
@@ -229,6 +231,7 @@ namespace Example4
                         case ConsoleKey.Enter:
                             try
                             {
+                                Console.Clear();
                                 if (arr[index].GetType() == typeof(DirectoryInfo))
                                 {
                                     DirectoryInfo d = arr[index] as DirectoryInfo;
@@ -248,6 +251,8 @@ namespace Example4
 
                             break;
                         case ConsoleKey.Escape:
+
+                          
                             quit = true;
                             break;
                         default:
@@ -263,7 +268,7 @@ namespace Example4
         static void Main(string[] args)
         {
             //Console.SetWindowSize(40,40);
-
+            Console.CursorVisible = false;
             F(@"C:\Users\Islam\Desktop\c#");
 
         }

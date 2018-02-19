@@ -18,19 +18,38 @@ namespace ConsoleApp1
             string s = File.ReadAllText(@"C:\Users\Islam\Desktop\Try\Lab1\prosto.txt");
 
             string[] numbers = s.Split(' ');
-          
+            List<int> list = new List<int>();
+            int minx = 10000;
+            int maxx = 0;
             for(int i = 0; i < numbers.Length; i++)
             {
-                if (pros(int.Parse(numbers[i])))
+                list.Add(int.Parse(numbers[i]));
+            }
+            for(int i = 0; i < list.Count; i++)
+            {
+                if (pros(i))
                 {
-                    Console.WriteLine(numbers[i]);
+                    if (i > maxx)
+                    {
+                        maxx = i;
+                    }
+                    if (i < minx)
+                    {
+                        minx = i;
+                    }
                 }
             }
+            string m = "maximum number is:"+ maxx;
+            string n = "\nminimum number is:"+minx;
+            string v = m + n;
+            Console.WriteLine( m);
+            Console.WriteLine( n);
+            File.WriteAllText(@"C:\Users\Islam\Desktop\Try\Lab1\prosto1.txt", v);
 
-           //// sr.Close();
-           // fs.Close();
+            //// sr.Close();
+            // fs.Close();
         }
-      
+
 
         static void Main(string[] args)
         {
@@ -38,7 +57,7 @@ namespace ConsoleApp1
         }
         static bool pros(int x)
         {
-            if (x <= 0) return false;
+            if ( x<=1) return false;
             for (int i = 2; i <= Math.Sqrt(x); i++)
             {
                 if (x % i == 0) return false;
