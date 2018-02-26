@@ -12,20 +12,28 @@ namespace SnakeExample
     {
        
         Game game = new Game();
-        string[] items = { "New game","Load game" ,"Save game", "Settings","Exit" };
+        string[] items = { "New game","Load game" ,"Save game","Records", "Settings","Exit" };
         int SelectItems = 0;
-        Worm worm;
-        Food food;
+       
+        
         void NewGame()
         {
             Console.Clear();
             game.Start();
-            while (game.isalive)
+            if (game.isalive == true)
             {
-                ConsoleKeyInfo pressbutton = Console.ReadKey();
-                game.Process(pressbutton);
+                while (game.isalive)
+                {
+                    ConsoleKeyInfo pressbutton = Console.ReadKey();
+                    game.Process(pressbutton);
+                    if (pressbutton.Key == ConsoleKey.Escape)
+                    {
+                        Process();
+                    }
+                }
             }
-          
+           
+            
 
            // StatusBar.ShowInfo("NewGame");
         }
@@ -44,25 +52,32 @@ namespace SnakeExample
 
         void Settings()
         {
-            ConsoleKeyInfo Sett = Console.ReadKey();
 
-            Menu menu = new Menu();
             Console.Clear();
 
             Console.Write("Write speed of snake: ");
             string n= Console.ReadLine();
             int sp = int.Parse(n);
             Game.speed = sp;
-            Console.ReadKey();
             Console.Clear();
             
-            menu.Process();
+            Process();
            
             //StatusBar.ShowInfo("Settings!");
+        } 
+        void Records()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            string s= File.ReadAllText("Records.txt");
+            Console.WriteLine(s);
+            Console.ReadKey();
+            Process();
         }
 
         void Exit()
         {
+
             Console.Clear();
             Environment.Exit(0);
            // StatusBar.ShowInfo("Exit!");
@@ -142,20 +157,37 @@ namespace SnakeExample
                                 break;
 
                             case 1:
+                                Console.Clear();
+                                game.GameLoad();
+                                 game.Deserial();
+                                 game.Start();
+                                
+                                    while (game.isalive)
+                                    {
+                                        ConsoleKeyInfo button = Console.ReadKey();
+                                        game.Process(button);
+                                        if (button.Key == ConsoleKey.Escape)
+                                        {
+                                            Process();
+                                        }
+                                    }
 
-                                worm = worm.Load() as Worm;
-                                food = food.Load() as Food;
-                                break;
+
+
+                                    break;
+                                
                             case 2:
-
-                                worm.SaveGame();
-                                food.SaveGame();
-
+                                game.GmeSave();
+                                game.Serial();
+                                Process();
                                 break;
                             case 3:
-                                Settings();
+                                Records();
                                 break;
                             case 4:
+                                Settings();
+                                break;
+                            case 5:
                                 Exit();
                                 break;
 

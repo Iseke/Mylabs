@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace SnakeExample
 {
-    enum GameLevel
+    public enum GameLevel
     {   
         
         zero,
@@ -30,6 +31,7 @@ namespace SnakeExample
 
         GameLevel gameLevel;
         public static int score = 1;
+        public int score1;
         public int boardW = 35;
         public int boardH = 35;
         public static int speed { get; set; }
@@ -40,14 +42,15 @@ namespace SnakeExample
         public  void Start()
         {
             ts = new ThreadStart(Draw);
-             t = new Thread(ts);
+            t = new Thread(ts);
             t.Start();
         }
-        public void Stop()
+
+        void Stop()
         {
             t.Abort();
         }
-       
+      
         public bool isalive;
         public Game()
         {
@@ -61,8 +64,9 @@ namespace SnakeExample
             wall.LoadLevel(gameLevel);
             
         }
-       
-              
+
+
+
         public void Process(ConsoleKeyInfo button)
         {
 
@@ -73,6 +77,7 @@ namespace SnakeExample
                 case ConsoleKey.UpArrow:
                     worm.DX = 0;
                     worm.DY = -1;
+
                     break;
                 case ConsoleKey.DownArrow:
                     worm.DX = 0;
@@ -87,16 +92,50 @@ namespace SnakeExample
                     worm.DY = 0;
                     break;
                 case ConsoleKey.Escape:
+                    
                     t.Abort();
+
                     Console.Clear();
-
-                    Menu menu = new Menu();
-
-                    menu.Process();
-
-
                     break;
+
+
             }
+        }
+        public void GmeSave()
+        {
+            StreamWriter sr = new StreamWriter(@"game.xml", false);
+            XmlSerializer xs = new XmlSerializer(typeof(Game));
+            xs.Serialize(sr, this);
+            sr.Close();
+        }
+        public Game GameLoad()
+        {
+
+            Game s = null;
+            using (FileStream fs = new FileStream(@"game.xml", FileMode.Open, FileAccess.Read))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(Game));
+                 s = xs.Deserialize(fs) as Game;
+            }
+
+            return s;
+        }
+        public void Serial()
+        {
+            worm.SaveGame();
+            food.SaveGame();
+            wall.SaveGame();
+            Console.Clear();
+            Console.WriteLine("Game saved!!!");
+            Console.ReadKey();
+            Console.Clear();
+        }
+        public void Deserial()
+        {
+            wall = wall.Load() as Wall;
+            food = food.Load() as Food;
+            worm = worm.Load() as Worm;
+
         }
         string[] list = { " Yes  ", "  No " };
         int items = 0;
@@ -123,8 +162,8 @@ namespace SnakeExample
         }
         public void WantsProcess(int num)
         {
-            bool quite = false;
-            while (!quite)
+            bool back = false;
+            while (!back)
             {
                 WantToSave();
                 ConsoleKeyInfo it = Console.ReadKey();
@@ -137,13 +176,7 @@ namespace SnakeExample
                             items = 0;
                         }
                         break;
-                    case ConsoleKey.UpArrow:
-                        items++;
-                        if (items > list.Length - 1)
-                        {
-                            items = 0;
-                        }
-                        break;
+                   
                     case ConsoleKey.LeftArrow:
                         items--;
                         if (items < 0)
@@ -151,24 +184,20 @@ namespace SnakeExample
                             items = list.Length - 1;
                         }
                         break;
-                    case ConsoleKey.DownArrow:
-                        items--;
-                        if (items < 0)
-                        {
-                            items = list.Length - 1;
-                        }
-                        break;
+                        
                     case ConsoleKey.Enter:
+                        back = true;
                         switch (items)
                         {
                             case 0:
 
-                                Yes(num);
-                                quite = true;
+                                Yes(num );
                                 break;
                             case 1:
                                 No();
-                                quite = true;
+                               // quite = true;
+
+
                                 break;
                         }
                         break;
@@ -178,25 +207,31 @@ namespace SnakeExample
 
         public void Yes(int num)
         {
+            List<string> list = new List<string>();
             Console.Clear();
             Console.Write("Write your name : ");
             string s = Console.ReadLine();
             StreamReader chit = new StreamReader("Records.txt");
             string pow = chit.ReadToEnd();
+            list.Add(pow);
             chit.Close();
              FileStream fs = new FileStream("Records.txt", FileMode.Open, FileAccess.ReadWrite);
             StreamWriter sr = new StreamWriter(fs);
-            pow = pow + " " + s + " " + num;
-            sr.WriteLine(pow);
-
-
-
-            sr.Close();
-            fs.Close();
+            string now = s + " " + num;
+            list.Add(now);
+            for(int i = 0; i < list.Count; i++)
+            {
+                sr.WriteLine(list[i]);
+            }
+                sr.Close();
+                fs.Close();
             Console.Clear();
             Menu menu = new Menu();
 
             menu.Process();
+
+
+
         }
         public void No()
         {
@@ -204,6 +239,7 @@ namespace SnakeExample
             Menu menu = new Menu();
 
             menu.Process();
+            return;
         }
         public void Draw()
         {
@@ -214,7 +250,7 @@ namespace SnakeExample
                 worm.Move();
                 if (worm.body[0].Equals(food.body[0]))
                 {
-
+                    Voice();
                     worm.body.Add(new Point { X = food.body[0].X, Y = food.body[0].Y });
 
                     score++;
@@ -240,7 +276,7 @@ namespace SnakeExample
 
                         Console.SetCursorPosition(4, 22);
 
-                        Console.ForegroundColor = ConsoleColor.White;
+
                         Console.Write("Your score : " + (score - 1));
                         Console.SetCursorPosition(4, 21);
                         Console.WriteLine("Stage - " + gameLevel);
@@ -251,8 +287,9 @@ namespace SnakeExample
                    {
                       if (p.Equals(worm.body[0]))
                       {
-                            
-                           
+                            VoiceGameOver();
+
+
                            
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Red;
@@ -260,11 +297,13 @@ namespace SnakeExample
                             Console.WriteLine("Your score: " + (score - 1));
                             Console.WriteLine("Do want to save your result?");
                             WantsProcess(score-1);
+                            score1 = score;
                             score = 1;
                             isalive = false;
 
                             Stop();
-                           // break;
+                           
+                            
                            
                                
                       }
@@ -278,6 +317,19 @@ namespace SnakeExample
                     
 
             }
-        } 
+        }
+        public void Voice()
+        {
+            SoundPlayer sound = new SoundPlayer(@"C:\Users\Islam\Desktop\switch-20.wav");
+            sound.Play();
+
+        }
+        public void VoiceGameOver()
+        {
+            SoundPlayer sound = new SoundPlayer(@"C:\Users\Islam\Desktop\Sound_06940_1_ (1).wav");
+            sound.Play();
+
+        }
+
     }
 }

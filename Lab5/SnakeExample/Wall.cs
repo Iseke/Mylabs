@@ -10,7 +10,7 @@ namespace SnakeExample
 {
     [Serializable]
 
-    class Wall :GameObject
+   public class Wall :GameObject
     {
         public Wall(Point firstpoint, ConsoleColor color, char sign) : base(firstpoint, sign, color)
 

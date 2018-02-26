@@ -63,26 +63,25 @@ namespace SnakeExample
         }
         public void SaveGame()
         {
-            Type t = this.GetType();
-            string file = t.Name + ".xml";
-            using (FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
-                XmlSerializer xs = new XmlSerializer(t);
-                xs.Serialize(fs, this);
-            }
-        }
+            Type k = this.GetType();
+            string file = k.Name + ".xml";
+            StreamWriter sr = new StreamWriter(file, false);
+            XmlSerializer xs = new XmlSerializer(k);
+            xs.Serialize(sr, this);
+            sr.Close();
+        } 
         public GameObject Load()
         {
             GameObject res = null;
             Type t = this.GetType();
-            string file = t.Name + ".xml";
-            using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+            string fname = t.Name + ".xml";
+
+            using (FileStream fs = new FileStream(fname, FileMode.Open, FileAccess.Read))
             {
                 XmlSerializer xs = new XmlSerializer(t);
                 res = xs.Deserialize(fs) as GameObject;
-                
-
             }
+
             return res;
         }
     }
