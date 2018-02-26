@@ -226,6 +226,7 @@ namespace SnakeExample
                 sr.Close();
                 fs.Close();
             Console.Clear();
+            //Environment.Exit(0);
             Menu menu = new Menu();
 
             menu.Process();
@@ -239,7 +240,7 @@ namespace SnakeExample
             Menu menu = new Menu();
 
             menu.Process();
-            return;
+            
         }
         public void Draw()
         {

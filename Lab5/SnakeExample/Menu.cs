@@ -72,6 +72,7 @@ namespace SnakeExample
             string s= File.ReadAllText("Records.txt");
             Console.WriteLine(s);
             Console.ReadKey();
+            Console.Clear();
             Process();
         }
 
